@@ -1,7 +1,7 @@
 
 
 pipeline {
-    agent any
+    agent {label "lab2-node01"}
 
     stages {
         stage('Hello') {
