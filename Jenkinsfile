@@ -26,9 +26,9 @@ pipeline {
                      mv deploy.yaml deploy.yaml.tmp
                      cat deploy.yaml.tmp | envsubst > deploy.yaml
                      rm -f deploy.yaml.tmp
-                                          kubectl apply -f service.yaml --kubeconfig ${KUBECONFIG} -n lab
 
                      kubectl apply -f deploy.yaml --kubeconfig ${KUBECONFIG} -n lab
+                      kubectl apply -f service.yaml --kubeconfig ${KUBECONFIG} -n lab
                      
                     '''
                 }
