@@ -9,6 +9,8 @@ pipeline {
                         docker login -u $USERNAME -p $PASSWORD
                         docker build -t hossam23/demo:v${BUILD_NUMBER} .
                         docker push hossam23/demo:v${BUILD_NUMBER}
+                        
+                        echo "Your Img.V:${BUILD_NUMBER}"
                     '''
                 }
             }
