@@ -1,23 +1,16 @@
-
-
 pipeline {
-    agent {label "lab2-node01"}
-
+    agent { label "lab2-node01" }
     stages {
         stage('build') {
-            script {
-             withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-             steps {
-                echo 'CI/CD'
-                sh '''
-                docker -u $USERNAME -p $PASSWORD
-                 docker build -t hossam23/demo:v1 .
-                 docker push
-                 
-                '''
-            }
-             }
-            
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    echo 'CI/CD'
+                    sh '''
+                        docker login -u $USERNAME -p $PASSWORD
+                        docker build -t hossam23/demo:v${BUILD_NUMBER} .
+                        docker push hossam23/demo:v${BUILD_NUMBER}
+                    '''
+                }
             }
         }
     }
