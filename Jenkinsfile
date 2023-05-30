@@ -11,9 +11,29 @@ pipeline {
                         docker push hossam23/demo:v${BUILD_NUMBER}
                         
                         echo "Your Img.V:${BUILD_NUMBER}"
+                        echo "${BUILD_NUMBER}" > ../buildV.txt
                     '''
                 }
             }
         }
+        
+          stage('deploy') {
+            steps {
+                withCredentials([file(credentialsId: 'kube-credentials',variable: 'KUBECONFIG')]) {
+                    echo 'CI/CD'
+                    sh '''
+                     export BUILD_NUMBER=$(cat ../buildV.txt)
+                     mv deploy.yaml deploy.yaml.tmp
+                     cat deploy.yaml.tmp | envsubst > deploy.yaml
+                     rm -f deploy.yaml.tmp
+                     kubectl apply -f deploy.yaml --kubeconfig ${KUBECONFIG} -n lab
+                     kubectl apply -f service.yaml --kubeconfig ${KUBECONFIG} -n lab
+                     
+                    '''
+                }
+            }
+        }
+        
+        
     }
 }
