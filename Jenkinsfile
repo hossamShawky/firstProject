@@ -6,7 +6,7 @@ pipeline {
                 echo 'build'
                 script{
                     if (BRANCH_NAME == "master" ) {
-                        withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                        withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                             sh '''
                                docker login -u $USERNAME -p $PASSWORD
                             docker build -t hossam23/demo:v${BUILD_NUMBER} .
@@ -28,7 +28,7 @@ pipeline {
                 echo 'deploy'
                 script {
                     if (BRANCH_NAME == "dev") {
-                        withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                        withCredentials([file(credentialsId: 'kube-credentials', variable: 'myconf')]) {
                             sh '''
                                   export BUILD_NUMBER=$(cat ../buildV.txt)
                             mv deploy.yaml deploy.yaml.tmp
