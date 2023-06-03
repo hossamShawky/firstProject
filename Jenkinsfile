@@ -3,7 +3,9 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    if ( BRANCH_NAME == "test" || BRANCH_NAME == "master") {
+                        
+                    withCredentials([usernamePassword(credentialsId: 'docker-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                     echo 'CI/CD'
                     sh '''
                         docker login -u $USERNAME -p $PASSWORD
@@ -14,12 +16,22 @@ pipeline {
                         echo "${BUILD_NUMBER}" > ../buildV.txt
                     '''
                 }
+                }
+                
+                else {
+                                        echo "user choosed ${BRANCH_NAME}"
+                }
+                
+                
+                
             }
         }
         
           stage('deploy') {
             steps {
-                withCredentials([file(credentialsId: 'kube-credentials',variable: 'KUBECONFIG')]) {
+      if (BRANCH_NAME == "dev" ) {
+
+                 withCredentials([file(credentialsId: 'kube-credentials',variable: 'KUBECONFIG')]) {
                     echo 'CI/CD'
                     sh '''
                      export BUILD_NUMBER=$(cat ../buildV.txt)
@@ -31,6 +43,11 @@ pipeline {
                       kubectl apply -f service.yaml --kubeconfig ${KUBECONFIG} -n lab
                      
                     '''
+                }
+                }
+                else
+                {
+                echo "Done......"
                 }
             }
         }
