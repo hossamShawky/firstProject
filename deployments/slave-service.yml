@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+   name: jenkis-svc
+   namespace: lab  
+spec:
+  selector:
+    app: jenkins-agent
+  ports:
+   - protocol:
+     port: 22
+     targetPort: 22   
+
