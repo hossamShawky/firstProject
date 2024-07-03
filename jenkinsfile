@@ -1,0 +1,37 @@
+pipeline {
+    agent { any  }   
+    stages {
+        stage('build') {
+            steps {
+                echo 'build'
+                script{
+                    if (BRANCH_NAME == "jenkins" ) {
+                             sh '''
+                             docker build -t hossam23/demo:lts .
+ 
+                            echo "Your Img.V:lts"
+                             '''
+                     }
+                    else {
+                        echo "user choosed ${BRANCH_NAME}"
+                    }
+                }
+            }
+        }
+        stage('deploy') {
+            steps {
+                echo 'deploy'
+                script {
+                    if (BRANCH_NAME == "jenkins") {
+                             sh '''
+                             kubectl create namespace  ${BRANCH_NAME}
+
+                            kubectl apply -f deploy.yaml   -n ${BRANCH_NAME}
+                            kubectl apply -f service.yaml  -n ${BRANCH_NAME}
+                            '''
+                     }
+                }
+            }
+        }
+    }
+}
