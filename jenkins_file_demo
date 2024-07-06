@@ -1,11 +1,14 @@
 pipeline {
     agent  any  
+ parameters {
+        choice(name: 'ENV_PIPLINE', choices: ['build', 'deploy'])
+    }
     stages {
         stage('build') {
             steps {
                 echo 'build'
                 script{
-                    if (BRANCH_NAME == "jenkins" ) {
+                    if (params.ENV_PIPLINE == "build") {
                              sh '''
                              docker build -t hossam23/demo:lts .
                              echo "Your Img.V:lts"
@@ -21,7 +24,7 @@ pipeline {
             steps {
                 echo 'deploy'
                 script {
-                    if (BRANCH_NAME == "jenkins") {
+                    if (params.ENV_PIPLINE == "deploy") {
                              sh '''
                              kubectl create namespace  ${BRANCH_NAME}
 
