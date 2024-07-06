@@ -21,7 +21,7 @@ pipeline {
             steps {
                 echo 'deploy'
                 script {
-                    if (BRANCH_NAME == "master") {
+                    if (BRANCH_NAME == "jenkins") {
                              sh '''
                              kubectl create namespace  ${BRANCH_NAME}
 
