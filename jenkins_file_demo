@@ -26,8 +26,7 @@ pipeline {
                 script {
                     if (params.ENV_PIPLINE == "deploy") {
                              sh '''
-                             kubectl create namespace  ${BRANCH_NAME}
-
+ 
                             kubectl apply -f deploy.yaml   -n ${BRANCH_NAME}
                             kubectl apply -f service.yaml  -n ${BRANCH_NAME}
                             '''
